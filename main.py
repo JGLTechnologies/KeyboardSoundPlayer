@@ -7,6 +7,7 @@ import pyttsx3
 from pynput import keyboard
 
 esc_presses = 1
+all_ = False
 
 
 def clear_presses():
@@ -17,6 +18,11 @@ def clear_presses():
 
 def on_press(key_):
     global esc_presses
+    if all:
+        try:
+            pygame.mixer.Sound(f"all.mp3").play()
+        except Exception:
+            return
     try:
         k = key_.name
         if k == "esc" and esc_presses >= 5:
@@ -57,6 +63,13 @@ except FileNotFoundError:
 
 
 def save_to_file():
+    global all_
+    try:
+        with open("all.mp3"):
+            pass
+        all_ = True
+    except FileNotFoundError:
+        pass
     engine = pyttsx3.init()
     engine.setProperty("rate", rate)
     voices = engine.getProperty("voices")
