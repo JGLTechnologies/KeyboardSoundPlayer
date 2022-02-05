@@ -37,7 +37,7 @@ try:
     with open("config.json", "r") as f:
         data = json.load(f)
         gender = data.get("gender") or "male"
-        rate = data.get("rate") or 150
+        rate = data.get("rate") or 170
         if gender.lower() == "male":
             gender = 0
         elif gender.lower() == "female":
