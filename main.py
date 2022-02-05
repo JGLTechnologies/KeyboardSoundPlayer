@@ -49,8 +49,11 @@ except FileNotFoundError:
     gender = 0
     rate = 150
 
-with open("keys.json") as f:
-    keys = json.load(f)
+try:
+    with open("keys.json") as f:
+        keys = json.load(f)
+except FileNotFoundError:
+    keys = {}
 
 
 def save_to_file():
