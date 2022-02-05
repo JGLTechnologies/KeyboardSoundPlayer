@@ -30,7 +30,7 @@ def on_press(key_):
         k = key_.char
     try:
         pygame.mixer.Sound(f"{k}.mp3").play()
-    except FileNotFoundError:
+    except Exception:
         return
 
 
