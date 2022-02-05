@@ -18,11 +18,11 @@ def clear_presses():
 
 def on_press(key_):
     global esc_presses
-    if all:
+    if all_:
         try:
             pygame.mixer.Sound(f"all.mp3").play()
         except Exception:
-            return
+            pass
     try:
         k = key_.name
         if k == "esc" and esc_presses >= 5:
