@@ -1,16 +1,31 @@
 import json
 import sys
+import threading
+import time
 import pygame
 import pyttsx3
 from pynput import keyboard
 
+esc_presses = 1
+
+
+def clear_presses():
+    global esc_presses
+    time.sleep(2)
+    esc_presses = 1
+
 
 def on_press(key_):
+    global esc_presses
     try:
-        if key_.name == "esc":
+        k = key_.name
+        if k == "esc" and esc_presses >= 5:
             pygame.quit()
             sys.exit()
-        k = key_.name
+        elif k == "esc":
+            if esc_presses == 1:
+                threading.Thread(target=clear_presses).start()
+            esc_presses += 1
     except AttributeError:
         k = key_.char
     for key in keys:
