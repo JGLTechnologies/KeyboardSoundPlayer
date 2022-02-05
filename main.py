@@ -28,9 +28,10 @@ def on_press(key_):
             esc_presses += 1
     except AttributeError:
         k = key_.char
-    for key in keys:
-        if k == key:
-            pygame.mixer.Sound(f"{key}.mp3").play()
+    try:
+        pygame.mixer.Sound(f"{k}.mp3").play()
+    except FileNotFoundError:
+        return
 
 
 try:
