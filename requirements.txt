@@ -1,5 +1,5 @@
 pynput
-tube_dl
 pygame
 pyttsx3
 moviepy
+pyinstaller

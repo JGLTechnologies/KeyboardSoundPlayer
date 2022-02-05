@@ -1,11 +1,8 @@
-import sys
-from pynput import keyboard
-import pygame
 import json
-from tube_dl import Youtube, extras
+import sys
+import pygame
 import pyttsx3
-
-listener = None
+from pynput import keyboard
 
 
 def on_press(key_):
@@ -20,8 +17,6 @@ def on_press(key_):
         if k == key:
             pygame.mixer.Sound(f"{key}.mp3").play()
 
-
-listener = keyboard.Listener(on_press=on_press)
 
 try:
     with open("config.json", "r") as f:
@@ -48,13 +43,11 @@ def save_to_file():
     voices = engine.getProperty("voices")
     engine.setProperty("voice", voices[gender].id)
     for key in keys:
-        if keys[key].startswith("https://"):
-            Youtube(keys[key]).formats.filter_by(only_audio=True)[0].download(convert="mp3")
-        else:
-            engine.save_to_file(keys[key], f"{key}.mp3")
+        engine.save_to_file(keys[key], f"{key}.mp3")
     engine.runAndWait()
 
 
+listener = keyboard.Listener(on_press=on_press)
 save_to_file()
 pygame.init()
 listener.run()
