@@ -1,5 +1,4 @@
 pynput
 pygame
 pyttsx3
-moviepy
 pyinstaller
