@@ -34,6 +34,10 @@ def on_press(key_):
             esc_presses += 1
     except AttributeError:
         k = key_.char
+    if k in keys:
+        if keys[k] == "reset()":
+            pygame.quit()
+            pygame.init()
     try:
         pygame.mixer.Sound(f"{k}.mp3").play()
     except Exception:
@@ -75,6 +79,8 @@ def save_to_file():
     voices = engine.getProperty("voices")
     engine.setProperty("voice", voices[gender].id)
     for key in keys:
+        if keys[key].endswith("()"):
+            continue
         engine.save_to_file(keys[key], f"{key}.mp3")
     engine.runAndWait()
 
