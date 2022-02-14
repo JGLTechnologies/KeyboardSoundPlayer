@@ -8,12 +8,20 @@ from pynput import keyboard
 
 esc_presses = 1
 all_ = False
+can_reset = True
 
 
 def clear_presses():
     global esc_presses
     time.sleep(2)
     esc_presses = 1
+
+
+def reset():
+    global can_reset
+    can_reset = False
+    time.sleep(1)
+    can_reset = True
 
 
 def on_press(key_):
@@ -36,8 +44,13 @@ def on_press(key_):
         k = key_.char
     if k in keys:
         if keys[k] == "reset()":
-            pygame.quit()
-            pygame.init()
+            if can_reset:
+                print(1)
+                threading.Thread(target=reset).start()
+                pygame.quit()
+                pygame.init()
+            else:
+                return
     try:
         pygame.mixer.Sound(f"{k}.mp3").play()
     except Exception:
