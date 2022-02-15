@@ -8,7 +8,7 @@ from pynput import keyboard
 
 esc_presses = 1
 all_ = False
-can_reset = True
+last_reset = time.time()
 
 
 def clear_presses():
@@ -17,14 +17,8 @@ def clear_presses():
     esc_presses = 1
 
 
-def reset():
-    global can_reset
-    can_reset = False
-    time.sleep(1)
-    can_reset = True
-
-
 def on_press(key_):
+    global last_reset
     global esc_presses
     if all_:
         try:
@@ -44,11 +38,10 @@ def on_press(key_):
         k = key_.char
     if k in keys:
         if keys[k] == "reset()":
-            if can_reset:
-                print(1)
-                threading.Thread(target=reset).start()
+            if last_reset + 1 <= time.time():
                 pygame.quit()
                 pygame.init()
+                last_reset = time.time()
             else:
                 return
     try:
