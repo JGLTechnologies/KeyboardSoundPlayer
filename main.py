@@ -11,7 +11,7 @@ esc_presses = 1
 all_ = False
 last_reset = time.time()
 
-with ThreadPoolExecutor(2) as pool:
+with ThreadPoolExecutor(1) as pool:
     def play(file: str):
         try:
             pygame.mixer.Sound(file).play()
@@ -21,7 +21,8 @@ with ThreadPoolExecutor(2) as pool:
 
     def reset():
         global last_reset
-        pygame.mixer.stop()
+        pygame.quit()
+        pygame.init()
         last_reset = time.time()
 
 
