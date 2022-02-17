@@ -40,7 +40,7 @@ with ThreadPoolExecutor(1) as pool:
                 if last_esc + 2 <= time.time():
                     esc_presses = 1
                 if esc_presses >= 5:
-                    pygame.quit()
+                    pool.submit(pygame.quit)
                     sys.exit()
                 elif esc_presses == 1:
                     last_esc = time.time()
@@ -50,7 +50,7 @@ with ThreadPoolExecutor(1) as pool:
         if k in keys:
             if keys[k] == "reset()":
                 if last_reset + 1 <= time.time():
-                    reset()
+                    pool.submit(reset)
                 else:
                     return
         try:
@@ -102,5 +102,5 @@ with ThreadPoolExecutor(1) as pool:
 
     listener = keyboard.Listener(on_press=on_press)
     save_to_file()
-    pygame.init()
+    pool.submit(pygame.init)
     listener.run()
