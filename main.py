@@ -51,6 +51,7 @@ with ThreadPoolExecutor(1) as pool:
             if keys[k] == "reset()":
                 if last_reset + 1 <= time.time():
                     pool.submit(reset)
+                    print(1)
                 else:
                     return
         try:
