@@ -11,6 +11,28 @@ esc_presses = 1
 all_ = False
 last_reset = time.time()
 
+try:
+    with open("config.json", "r") as f:
+        data = json.load(f)
+        gender = data.get("gender") or "male"
+        rate = data.get("rate") or 170
+        if gender.lower() == "male":
+            gender = 0
+        elif gender.lower() == "female":
+            gender = 1
+        else:
+            gender = 0
+        channels = data.get("channels") or 8
+except FileNotFoundError:
+    gender = 0
+    rate = 150
+
+try:
+    with open("keys.json") as f:
+        keys = json.load(f)
+except FileNotFoundError:
+    keys = {}
+
 with ThreadPoolExecutor(1) as pool:
     def play(file: str):
         try:
@@ -21,8 +43,7 @@ with ThreadPoolExecutor(1) as pool:
 
     def reset():
         global last_reset
-        pygame.quit()
-        pygame.init()
+        pygame.mixer.stop()
         last_reset = time.time()
 
 
@@ -51,35 +72,12 @@ with ThreadPoolExecutor(1) as pool:
             if keys[k] == "reset()":
                 if last_reset + 1 <= time.time():
                     pool.submit(reset)
-                    print(1)
                 else:
                     return
         try:
             pool.submit(play, f"{k}.mp3")
         except Exception:
             return
-
-
-    try:
-        with open("config.json", "r") as f:
-            data = json.load(f)
-            gender = data.get("gender") or "male"
-            rate = data.get("rate") or 170
-            if gender.lower() == "male":
-                gender = 0
-            elif gender.lower() == "female":
-                gender = 1
-            else:
-                gender = 0
-    except FileNotFoundError:
-        gender = 0
-        rate = 150
-
-    try:
-        with open("keys.json") as f:
-            keys = json.load(f)
-    except FileNotFoundError:
-        keys = {}
 
 
     def save_to_file():
@@ -104,4 +102,5 @@ with ThreadPoolExecutor(1) as pool:
     listener = keyboard.Listener(on_press=on_press)
     save_to_file()
     pool.submit(pygame.init)
+    pool.submit(pygame.mixer.set_num_channels, channels)
     listener.run()
