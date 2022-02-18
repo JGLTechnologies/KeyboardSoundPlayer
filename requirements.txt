@@ -2,3 +2,6 @@ pynput
 pygame
 pyttsx3
 pyinstaller
+pytube
+requests
+moviepy

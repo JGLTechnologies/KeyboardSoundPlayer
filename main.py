@@ -1,10 +1,12 @@
 import json
-import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
 import pyttsx3
 from pynput import keyboard
+from pytube import YouTube
+import requests
+from moviepy.editor import *
 
 last_esc = time.time()
 esc_presses = 1
@@ -32,6 +34,17 @@ try:
         keys = json.load(f)
 except FileNotFoundError:
     keys = {}
+
+
+def connected() -> bool:
+    try:
+        with requests.Session() as session:
+            with session.get("http://google.com", timeout=5):
+                pass
+    except Exception:
+        return False
+    return True
+
 
 with ThreadPoolExecutor(1) as pool:
     def play(file: str):
@@ -93,6 +106,14 @@ with ThreadPoolExecutor(1) as pool:
         voices = engine.getProperty("voices")
         engine.setProperty("voice", voices[gender].id)
         for key in keys:
+            if keys[key].startswith("https://") and connected():
+                vid = YouTube(url=keys[key])
+                name = vid.streams.filter(file_extension="mp4").first().download()
+                video = VideoFileClip(name.split("\\")[-1])
+                video.audio.write_audiofile(f"{key}.mp3")
+                video.close()
+                os.remove(name)
+                continue
             if keys[key].endswith("()"):
                 continue
             engine.save_to_file(keys[key], f"{key}.mp3")
