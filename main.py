@@ -27,6 +27,7 @@ try:
         else:
             gender = 0
         channels = data.get("channels") or 8
+        yt_update = data.get("yt_update") or False
 except FileNotFoundError:
     gender = 0
     rate = 150
@@ -112,6 +113,8 @@ with ThreadPoolExecutor(1) as pool:
                 if not connected():
                     continue
                 vid = YouTube(url=keys[key])
+                if os.path.exists(f"{key}.mp3") and not yt_update:
+                    continue
                 name = vid.streams.filter(file_extension="mp4").first().download()
                 video = VideoFileClip(name)
                 video.audio.write_audiofile(f"{key}.mp3")

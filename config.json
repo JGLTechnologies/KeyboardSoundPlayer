@@ -1,5 +1,6 @@
 {
   "gender": "male",
   "rate": 170,
-  "channels": 8
+  "channels": 8,
+  "yt_update": false
 }
