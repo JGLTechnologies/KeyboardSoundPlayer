@@ -1,12 +1,14 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
 import time
+import sys
 import pygame
 import pyttsx3
 from pynput import keyboard
 from pytube import YouTube
 import requests
-from moviepy.editor import *
+from moviepy.video.io.VideoFileClip import VideoFileClip
+import os
 
 last_esc = time.time()
 esc_presses = 1
