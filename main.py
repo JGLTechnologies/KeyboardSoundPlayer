@@ -113,7 +113,7 @@ with ThreadPoolExecutor(1) as pool:
                     continue
                 vid = YouTube(url=keys[key])
                 name = vid.streams.filter(file_extension="mp4").first().download()
-                video = VideoFileClip(name.split("\\")[-1])
+                video = VideoFileClip(name)
                 video.audio.write_audiofile(f"{key}.mp3")
                 video.close()
                 os.remove(name)
