@@ -108,7 +108,9 @@ with ThreadPoolExecutor(1) as pool:
         voices = engine.getProperty("voices")
         engine.setProperty("voice", voices[gender].id)
         for key in keys:
-            if keys[key].startswith("https://") and connected():
+            if keys[key].startswith("https://"):
+                if not connected():
+                    continue
                 vid = YouTube(url=keys[key])
                 name = vid.streams.filter(file_extension="mp4").first().download()
                 video = VideoFileClip(name.split("\\")[-1])
