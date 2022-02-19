@@ -2,12 +2,9 @@
 
 KeyboardSoundPlayer is a program written in python that allows you to play a certain mp3 file when a certain key is
 pressed. You can use you own mp3 file. You have to name it the name of the key. E.g. left.mp3 is played when the left
-arrow is pressed. You can also create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files.
-You can put a YouTube url in the keys.json, and it will download the audio for you. The feature is still experimental.
-See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
-example. To close the program press the escape key 5 time in the span of 2 seconds.
+arrow is pressed. To close the program press the escape key 5 time in the span of 2 seconds.
 
-## Config.json
+## config.json
 See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an example.
 
     channels:
@@ -27,3 +24,18 @@ See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/co
         default: false
         description: Should youtube audio file be redownloaded everytime the program is run? 
         If this is false you have to manually delete the mp3 file if you want to change the audio for the key.
+
+## keys.json
+You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files.
+You can put a YouTube url in the keys.json file, and it will download the audio for you. The feature is still experimental.
+See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
+example.
+
+## Functions
+Functions can be bound to a certain key using the keys.json file.
+
+Functions:
+
+    reset():
+        description: Clear all of the audio channels.
+    
