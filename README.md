@@ -2,7 +2,7 @@
 
 KeyboardSoundPlayer is a program written in python that allows you to play a certain mp3 file when a certain key is
 pressed. You can use you own mp3 file. You have to name it the name of the key. E.g. left.mp3 is played when the left
-arrow is pressed. To close the program press the escape key 5 time in the span of 2 seconds.
+arrow is pressed.
 
 ## config.json
 See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an example.
@@ -22,8 +22,12 @@ See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/co
     yt_update:
         type: boolean
         default: false
-        description: Should youtube audio file be redownloaded everytime the program is run? 
+        description: Should youtube audio files be redownloaded everytime the program is run? 
         If this is false you have to manually delete the mp3 file if you want to change the audio for the key.
+    exit_key:
+        type: text
+        default: esc
+        description: Press this key 5 times in 2 seconds to close the program
 
 ## keys.json
 You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files.
