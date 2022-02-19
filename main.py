@@ -14,6 +14,7 @@ last_exit_press = time.time()
 exit_presses = 1
 all_ = False
 last_reset = time.time()
+enabled = True
 
 try:
     with open("config.json", "r") as f:
@@ -96,11 +97,13 @@ with ThreadPoolExecutor(1) as pool:
 
 
     def on_press(key_):
+        global enabled
         global exit_presses
         global last_exit_press
         if all_:
             try:
-                pool.submit(play, "all.mp3")
+                if enabled:
+                    pool.submit(play, "all.mp3")
             except Exception:
                 pass
         try:
@@ -122,8 +125,12 @@ with ThreadPoolExecutor(1) as pool:
                     pool.submit(reset)
                 else:
                     return
+            elif keys[k] == "toggle()":
+                enabled = not enabled
+                return
         try:
-            pool.submit(play, f"{k}.mp3")
+            if enabled:
+                pool.submit(play, f"{k}.mp3")
         except Exception:
             return
 

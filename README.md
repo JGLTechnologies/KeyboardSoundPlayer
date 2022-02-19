@@ -42,4 +42,6 @@ Functions:
 
     reset():
         description: Clear all of the audio channels.
+    toggle():
+        description: Toggle the sound player
     
