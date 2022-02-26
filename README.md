@@ -44,4 +44,8 @@ Functions:
         description: Clear all of the audio channels.
     toggle():
         description: Toggle the sound player
+
+## Extra Info
+
+To play a sound when any key is pressed name the key "all" in keys.json or directly add an all.mp3 file.
     

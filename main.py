@@ -64,6 +64,8 @@ def save_to_file():
     voices = engine.getProperty("voices")
     engine.setProperty("voice", voices[gender].id)
     for key in keys:
+        if keys[key] == "all":
+            all_ = True
         if keys[key].startswith("https://"):
             if not connected():
                 continue
