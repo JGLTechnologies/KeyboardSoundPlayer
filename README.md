@@ -5,7 +5,9 @@ pressed. You can use you own mp3 file. You have to name it the name of the key. 
 arrow is pressed.
 
 ## config.json
-See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an example.
+
+See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an
+example.
 
     channels:
         type: integer
@@ -28,14 +30,20 @@ See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/co
         type: text
         default: esc
         description: Press this key 5 times in 2 seconds to close the program
+    port:
+        type: int
+        default: 6238
+        description: The port used to communicate between the gui and the sound player (Don't change unless the default port is causing errors) 
 
 ## keys.json
-You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files.
-You can put a YouTube url in the keys.json file, and it will download the audio for you. The feature is still experimental.
+
+You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files. You can put a YouTube url in the
+keys.json file, and it will download the audio for you. The feature is still experimental.
 See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
 example.
 
 ## Functions
+
 Functions can be bound to a certain key using the keys.json file.
 
 Functions:

@@ -9,12 +9,18 @@ from pytube import YouTube
 import requests
 from moviepy.video.io.VideoFileClip import VideoFileClip
 import os
+from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
+from disnake.ext import tasks
 
 last_exit_press = time.time()
 exit_presses = 1
 all_ = False
 last_reset = time.time()
 enabled = True
+aiohttp_pool = ThreadPoolExecutor(1)
+app = Application()
+shutdown = False
+mp3s = {}
 
 try:
     with open("config.json", "r") as f:
@@ -30,9 +36,14 @@ try:
         channels = data.get("channels") or 8
         yt_update = data.get("yt_update") or False
         exit_key = data.get("exit_key") or "esc"
+        port = data.get("port") or 6238
 except FileNotFoundError:
     gender = 0
     rate = 150
+    channels = 8
+    yt_update = False
+    exit_key = "esc"
+    port = 6238
 
 try:
     with open("keys.json") as f:
@@ -80,11 +91,21 @@ def save_to_file():
             continue
         if keys[key].endswith("()"):
             continue
+        if keys[key].endswith(".mp3"):
+            mp3s[key] = keys[key]
+            continue
         engine.save_to_file(keys[key], f"{key}.mp3")
     engine.runAndWait()
 
 
 with ThreadPoolExecutor(1) as pool:
+    def stop():
+        global shutdown
+        shutdown = True
+        pool.submit(pygame.quit)
+        os._exit(1)
+
+
     def play(file: str):
         try:
             pygame.mixer.Sound(file).play()
@@ -114,8 +135,7 @@ with ThreadPoolExecutor(1) as pool:
                 if last_exit_press + 2 <= time.time():
                     exit_presses = 1
                 if exit_presses >= 5:
-                    pool.submit(pygame.quit)
-                    sys.exit()
+                    stop()
                 elif exit_presses == 1:
                     last_exit_press = time.time()
                 exit_presses += 1
@@ -132,7 +152,11 @@ with ThreadPoolExecutor(1) as pool:
                 return
         try:
             if enabled:
-                pool.submit(play, f"{k}.mp3")
+                if k in mp3s:
+                    file = mp3s[k]
+                else:
+                    file = f"{k}.mp3"
+                pool.submit(play, file)
         except Exception:
             return
 
@@ -141,4 +165,37 @@ with ThreadPoolExecutor(1) as pool:
     save_to_file()
     pool.submit(pygame.init)
     pool.submit(pygame.mixer.set_num_channels, channels)
+    routes = RouteTableDef()
+
+
+    @routes.get("/online")
+    async def online(request: Request):
+        return Response(text="True", status=200)
+
+
+    @routes.get("/stop")
+    async def online(request: Request):
+        stop()
+        return Response(text="ok", status=200)
+
+
+    @tasks.loop(seconds=.5)
+    async def shutdown_loop():
+        if shutdown:
+            await app.shutdown()
+            await app.cleanup()
+            sys.exit()
+
+
+    async def startup(app: Application):
+        shutdown_loop.start()
+
+
+    def run_server():
+        run_app(app, port=port)
+
+
+    app.on_startup.append(startup)
+    app.add_routes(routes)
+    aiohttp_pool.submit(run_server)
     listener.run()
