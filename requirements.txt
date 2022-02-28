@@ -7,3 +7,4 @@ requests
 moviepy
 aiohttp
 disnake
+filelock
