@@ -1,0 +1,59 @@
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe.config
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.pdb
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csprojAssemblyReference.cache
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form1.resources
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Properties.Resources.resources
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.GenerateResource.cache
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CoreCompileInputs.cache
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.exe
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.pdb
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form2.resources
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CopyComplete
+C:\Users\josep\OneDrive\Documents\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form3.resources
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe.config
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.AssemblyReference.cache
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form1.resources
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form2.resources
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form3.resources
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Properties.Resources.resources
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.GenerateResource.cache
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CoreCompileInputs.cache
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CopyComplete
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\OneDrive\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\bin\Debug\KeyboardSoundPlayer.exe.config
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\bin\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\bin\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.csproj.AssemblyReference.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.Form1.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.Form2.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.Form3.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.Properties.Resources.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.csproj.GenerateResource.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.csproj.CoreCompileInputs.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.csproj.CopyComplete
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\obj\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe.config
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\bin\Debug\Newtonsoft.Json.xml
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.AssemblyReference.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form1.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form2.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Form3.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.Properties.Resources.resources
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.GenerateResource.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CoreCompileInputs.cache
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CopyComplete
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.exe
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.pdb
