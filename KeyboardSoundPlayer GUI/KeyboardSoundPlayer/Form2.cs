@@ -61,7 +61,7 @@ namespace KeyboardSoundPlayer
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/Nebulizer1213/KeyboardSoundPlayer#configjson");
+            Process.Start("https://github.com/JGLTechnologies/KeyboardSoundPlayer#configjson");
         }
 
         private void label4_Click(object sender, EventArgs e)

@@ -6,7 +6,7 @@ arrow is pressed.
 
 ## config.json
 
-See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an
+See <a href="https://github.com/JGLTechnologies/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an
 example.
 
     channels:
@@ -39,7 +39,7 @@ example.
 
 You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files. You can put a YouTube url in the
 keys.json file, and it will download the audio for you. The feature is still experimental.
-See <a href="https://github.com/Nebulizer1213/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
+See <a href="https://github.com/JGLTechnologies/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
 example.
 
 ## Functions
