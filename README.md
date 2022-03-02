@@ -4,7 +4,7 @@ KeyboardSoundPlayer is a program written in python that allows you to play a cer
 pressed. You can use you own mp3 file. You have to name it the name of the key. E.g. left.mp3 is played when the left
 arrow is pressed.
 
-## config.json
+## config
 
 See <a href="https://github.com/JGLTechnologies/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an
 example.
@@ -35,7 +35,7 @@ example.
         default: 6238
         description: The port used to communicate between the gui and the sound player (Don't change unless the default port is causing errors) 
 
-## keys.json
+## keys
 
 You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files. You can put a YouTube url in the
 keys.json file, and it will download the audio for you. The feature is still experimental.
@@ -44,7 +44,7 @@ example.
 
 ## Functions
 
-Functions can be bound to a certain key using the keys.json file.
+Functions can be bound to a certain key.
 
 Functions:
 
