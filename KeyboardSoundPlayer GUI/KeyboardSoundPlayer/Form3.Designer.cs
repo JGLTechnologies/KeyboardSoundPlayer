@@ -35,7 +35,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.LightCyan;
+            this.label1.BackColor = System.Drawing.Color.LightSteelBlue;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F);
             this.label1.ForeColor = System.Drawing.Color.Black;
             this.label1.Location = new System.Drawing.Point(23, 82);
