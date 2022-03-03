@@ -71,7 +71,7 @@ namespace KeyboardSoundPlayer
                 {
                     using (HttpResponseMessage r = await c.GetAsync("http://localhost:" + port + "/" + path))
                     {
-                        // Do Nothing
+                        // Do nothing
                     }
                 }
 
@@ -82,6 +82,7 @@ namespace KeyboardSoundPlayer
         private async void button2_Click(object sender, EventArgs e)
         {
             await RequestPath("stop");
+            errorProvider1.Clear();
         }
  
   
@@ -98,12 +99,17 @@ namespace KeyboardSoundPlayer
         }
 
         private async void button1_Click(object sender, EventArgs e)
-        {
-            if (!await IsOnline()) {
+        {   
+            if (!await IsOnline())
+            {
+                errorProvider1.Clear();
                 Process process = new Process();
                 process.StartInfo.FileName = "main.exe";
                 process.Start();
                 Thread.Sleep(1);
+            }
+            else {
+                errorProvider1.SetError(button1, "The sound player is already started.");
             }
 
         }

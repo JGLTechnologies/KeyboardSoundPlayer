@@ -77,6 +77,8 @@ namespace KeyboardSoundPlayer
             int port;
             bool error = false;
 
+            errorProvider1.Clear();
+
             if (textBox1.Text.ToLower() != "male" && textBox1.Text.ToLower() != "female") {
                 errorProvider1.SetError(textBox1, "Gender must be male or female.");
                 error = true;
