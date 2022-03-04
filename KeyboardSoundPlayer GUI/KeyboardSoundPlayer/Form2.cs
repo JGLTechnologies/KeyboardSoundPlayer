@@ -142,7 +142,6 @@ namespace KeyboardSoundPlayer
                 Process process = new Process();
                 process.StartInfo.FileName = "main.exe";
                 process.Start();
-                Thread.Sleep(1);
             }
             Form1.port = port;
             if (!File.Exists("config.json"))

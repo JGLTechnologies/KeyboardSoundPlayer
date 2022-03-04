@@ -119,6 +119,11 @@ namespace KeyboardSoundPlayer
             if (textBox1.Text == "" || textBox2.Text == "") {
                 return;
             }
+            try
+            {
+                File.Delete(textBox2.Text.ToLower() + ".mp3");
+            }
+            catch { }
             if (!File.Exists("keys.json"))
             {
                 File.Create("keys.json").Close();

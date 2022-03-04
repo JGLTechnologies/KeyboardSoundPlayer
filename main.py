@@ -154,6 +154,10 @@ try:
                     elif keys[k] == "toggle()":
                         enabled = not enabled
                         return
+                    elif keys[k] == "pause()":
+                        pool.submit(pygame.mixer.pause)
+                    elif keys[k] == "unpause()":
+                        pool.submit(pygame.mixer.unpause)
                 try:
                     if enabled:
                         if k in mp3s:
