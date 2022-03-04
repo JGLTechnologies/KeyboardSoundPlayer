@@ -165,5 +165,10 @@ namespace KeyboardSoundPlayer
             catch { return; }
             textBox2.Text = "";
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start("https://github.com/JGLTechnologies/KeyboardSoundPlayer#keys");
+        }
     }
 }

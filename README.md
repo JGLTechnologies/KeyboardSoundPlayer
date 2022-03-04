@@ -35,7 +35,7 @@ This is the documentation for the config window in KeyboardSoundPlayer.
 
 ## keys
 
-In the main window for keyboard sound player there are two text boxes. On the left you can type the path for an mp3 file, a YouTube url, or text.
+In the main window of KeyboardSoundPlayer there are two text boxes. On the left you can type the path for an mp3 file, a YouTube url, or text.
 On the right you type the name of the key. After you save the changes, restart the sound player. This sound will now play whenever you press the key.
 When removing a key you can leave the box on the left blank. See the section bellow to learn how to map a function to a key.
 
