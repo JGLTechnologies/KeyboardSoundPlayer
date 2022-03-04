@@ -1,13 +1,11 @@
 # KeyboardSoundPlayer
 
 KeyboardSoundPlayer is a program written in python that allows you to play a certain mp3 file when a certain key is
-pressed. You can use you own mp3 file. You have to name it the name of the key. E.g. left.mp3 is played when the left
-arrow is pressed.
+pressed. You can use an already made mp3, or paste in a YouTube url and have KeyboardSoundPlayer convert it to and mp3 for you.
 
 ## config
 
-See <a href="https://github.com/JGLTechnologies/KeyboardSoundPlayer/blob/master/config.json">config.json</a> for an
-example.
+This is the documentation for the config window in KeyboardSoundPlayer.
 
     channels:
         type: integer
@@ -37,10 +35,9 @@ example.
 
 ## keys
 
-You can create a keys.json file to have KeyboardSoundPlayer auto generate mp3 files. You can put a YouTube url in the
-keys.json file, and it will download the audio for you. The feature is still experimental.
-See <a href="https://github.com/JGLTechnologies/KeyboardSoundPlayer/blob/master/keys.json">keys.json</a> for an example.
-example.
+In the main window for keyboard sound player there are two text boxes. On the left you can type the path for an mp3 file, a YouTube url, or text.
+On the right you type the name of the key. After you save the changes, restart the sound player. This sound will now play whenever you press the key.
+When removing a key you can leave the box on the left blank. See the section bellow to learn how to map a function to a key.
 
 ## Functions
 
@@ -49,7 +46,7 @@ Functions can be bound to a certain key.
 Functions:
 
     reset():
-        description: Clear all of the audio channels.
+        description: Clear all of the audio channels
     toggle():
         description: Toggle the sound player
     pause():
