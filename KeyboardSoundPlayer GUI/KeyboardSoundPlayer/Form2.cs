@@ -115,13 +115,13 @@ namespace KeyboardSoundPlayer
             {
                 if (port < 1 || port > 10000)
                 {
-                    errorProvider1.SetError(textBox5, "Port must be a vaild integer between 0 and 10000.");
+                    errorProvider1.SetError(textBox5, "Port must be a vaild integer between 1 and 10000.");
                     error = true;
                 }
             }
             else
             {
-                errorProvider1.SetError(textBox5, "Port must be a vaild integer between 0 and 10000.");
+                errorProvider1.SetError(textBox5, "Port must be a vaild integer between 1 and 10000.");
                 error = true;
             }
 
