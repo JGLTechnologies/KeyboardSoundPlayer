@@ -1,7 +1,6 @@
 import json
 from concurrent.futures import ThreadPoolExecutor
 import time
-import sys
 import pygame
 import pyttsx3
 from pynput import keyboard
@@ -12,10 +11,15 @@ import os
 from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
 from disnake.ext import tasks
 import filelock
+from tkinter import *
+from tkinter import ttk
 
 lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
 try:
     with lock.acquire():
+        root = Tk()
+        done = False
+        progress = ttk.Progressbar()
         last_exit_press = time.time()
         exit_presses = 1
         all_ = False
@@ -56,6 +60,26 @@ try:
             keys = {}
 
 
+        def start_pb():
+            global root
+            global progress
+            root = Tk()
+            progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
+            root.title("KeyboardSoundPlayer")
+            root.geometry("250x75")
+            progress.pack(pady=20)
+            root.attributes('-topmost', 1)
+
+            def loop():
+                if done:
+                    root.destroy()
+                else:
+                    root.after(100, loop)
+
+            root.after(100, loop)
+            root.mainloop()
+
+
         def connected() -> bool:
             try:
                 with requests.Session() as session:
@@ -68,6 +92,9 @@ try:
 
         def save_to_file():
             global all_
+            global progress
+            global root
+            global done
             try:
                 with open("all.mp3"):
                     pass
@@ -83,23 +110,32 @@ try:
                     all_ = True
                 if keys[key].startswith("https://"):
                     if not connected():
+                        progress["value"] += float(100) / (len(keys) + 1)
                         continue
                     vid = YouTube(url=keys[key])
                     if os.path.exists(f"{key}.mp3") and not yt_update:
+                        progress["value"] += float(100) / (len(keys) + 1)
                         continue
                     name = vid.streams.filter(file_extension="mp4").first().download()
                     video = VideoFileClip(name)
                     video.audio.write_audiofile(f"{key}.mp3")
                     video.close()
                     os.remove(name)
+                    progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 if keys[key].endswith("()"):
+                    progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 if keys[key].endswith(".mp3"):
                     mp3s[key] = keys[key]
+                    progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 engine.save_to_file(keys[key], f"{key}.mp3")
+                progress["value"] += float(100) / (len(keys) + 1)
             engine.runAndWait()
+            progress["value"] += float(100) / (len(keys) + 1)
+            time.sleep(1)
+            done = True
 
 
         with ThreadPoolExecutor(1) as pool:
@@ -170,6 +206,7 @@ try:
 
 
             listener = keyboard.Listener(on_press=on_press)
+            pool.submit(start_pb)
             save_to_file()
             pool.submit(pygame.init)
             pool.submit(pygame.mixer.set_num_channels, channels)
