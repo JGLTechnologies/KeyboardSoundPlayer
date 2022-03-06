@@ -66,6 +66,7 @@ try:
             root = Tk()
             progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
             root.title("KeyboardSoundPlayer")
+            root.resizable(False, False)
             root.geometry("250x75")
             progress.pack(pady=20)
             root.attributes('-topmost', 1)
