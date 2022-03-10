@@ -84,8 +84,6 @@ namespace KeyboardSoundPlayer
             await RequestPath("stop");
             errorProvider1.Clear();
         }
- 
-  
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -162,7 +160,7 @@ namespace KeyboardSoundPlayer
             {
                 File.Delete(textBox2.Text.ToLower() + ".mp3");
             }
-            catch { return; }
+            catch { textBox2.Text = ""; return; }
             textBox2.Text = "";
         }
 
