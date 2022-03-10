@@ -184,17 +184,20 @@ try:
                     k = key_.char
                 if k in keys:
                     if keys[k] == "reset()":
-                        if last_reset + 1 <= time.time():
-                            pool.submit(reset)
-                        else:
-                            return
+                        if enabled:
+                            if last_reset + 1 <= time.time():
+                                pool.submit(reset)
+                            else:
+                                return
                     elif keys[k] == "toggle()":
                         enabled = not enabled
                         return
                     elif keys[k] == "pause()":
-                        pool.submit(pygame.mixer.pause)
+                        if enabled:
+                            pool.submit(pygame.mixer.pause)
                     elif keys[k] == "unpause()":
-                        pool.submit(pygame.mixer.unpause)
+                        if enabled:
+                            pool.submit(pygame.mixer.unpause)
                 try:
                     if enabled:
                         if k in mp3s:
