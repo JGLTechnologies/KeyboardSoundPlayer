@@ -72,3 +72,4 @@ C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\Keybo
 C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.CopyComplete
 C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.exe
 C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\KeyboardSoundPlayer GUI\KeyboardSoundPlayer\obj\Debug\KeyboardSoundPlayer.csproj.SuggestedBindingRedirects.cache

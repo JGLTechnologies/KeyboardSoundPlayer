@@ -19,6 +19,7 @@ namespace KeyboardSoundPlayer
             if (Mutex.WaitOne(TimeSpan.Zero, true))
             {
                 Application.EnableVisualStyles();
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
                 Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new Form1());
             }
