@@ -13,6 +13,15 @@ from disnake.ext import tasks
 import filelock
 from tkinter import *
 from tkinter import ttk
+import socket
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+s.connect(("8.8.8.8", 80))
+
+ip = s.getsockname()[0]
+
+s.close()
 
 lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
 try:
@@ -172,16 +181,17 @@ try:
                         pass
                 try:
                     k = key_.name
-                    if k == exit_key:
-                        if last_exit_press + 2 <= time.time():
-                            exit_presses = 1
-                        if exit_presses >= 5:
-                            stop()
-                        elif exit_presses == 1:
-                            last_exit_press = time.time()
-                        exit_presses += 1
                 except AttributeError:
                     k = key_.char
+                if k == exit_key:
+                    if last_exit_press + 2 <= time.time():
+                        exit_presses = 1
+                    if exit_presses >= 5:
+                        stop()
+                    elif exit_presses == 1:
+                        last_exit_press = time.time()
+                    exit_presses += 1
+
                 if k in keys:
                     if keys[k] == "reset()":
                         if enabled:
@@ -226,6 +236,75 @@ try:
             async def online(request: Request):
                 stop()
                 return Response(text="ok", status=200)
+
+
+            @routes.get("/play")
+            async def play_endpoint(request: Request):
+                global enabled
+                global exit_presses
+                global last_exit_press
+                if all_:
+                    try:
+                        if enabled:
+                            pool.submit(play, "all.mp3")
+                    except Exception:
+                        pass
+                k = request.query["key"]
+                if k == exit_key:
+                    if last_exit_press + 2 <= time.time():
+                        exit_presses = 1
+                    if exit_presses >= 5:
+                        stop()
+                    elif exit_presses == 1:
+                        last_exit_press = time.time()
+                    exit_presses += 1
+
+                if k in keys:
+                    if keys[k] == "reset()":
+                        if enabled:
+                            if last_reset + 1 <= time.time():
+                                pool.submit(reset)
+                            else:
+                                return
+                    elif keys[k] == "toggle()":
+                        enabled = not enabled
+                        return
+                    elif keys[k] == "pause()":
+                        if enabled:
+                            pool.submit(pygame.mixer.pause)
+                    elif keys[k] == "unpause()":
+                        if enabled:
+                            pool.submit(pygame.mixer.unpause)
+                try:
+                    if enabled:
+                        if k in mp3s:
+                            file = mp3s[k]
+                        else:
+                            file = f"{k}.mp3"
+                        pool.submit(play, file)
+                except Exception:
+                    return
+
+
+            @routes.get("/play/gui")
+            async def play_gui(request: Request):
+                html = """
+                <html>
+                <form id="form">
+                <input id="input" type="text" required/><br>
+                    <button id = "button" onclick="play()">Play</button>
+                </form>
+                
+                <script>
+                    const play = async () => {
+                        let key = document.getElementById("input").value.toLowerCase()
+                        await fetch(`http://{ip}:{port}/play?key=${key}`)
+                        document.getElementById("input").value = ""
+                    }
+                </script>
+                </html>
+                """.replace("{ip}", ip).replace("{port}", str(port))
+                return Response(content_type="text/html", status=200, text=html)
 
 
             @tasks.loop(seconds=.5)
