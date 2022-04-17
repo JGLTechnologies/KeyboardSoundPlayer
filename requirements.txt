@@ -8,3 +8,4 @@ moviepy
 aiohttp
 disnake
 filelock
+git+https://github.com/pytube/pytube
