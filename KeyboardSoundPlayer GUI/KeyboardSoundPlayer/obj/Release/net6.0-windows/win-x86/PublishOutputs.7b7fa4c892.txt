@@ -1,0 +1,9 @@
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\KeyboardSoundPlayer.pdb
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\KeyboardSoundPlayer.dll.config
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\D3DCompiler_47_cor3.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\PenImc_cor3.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\PresentationNative_cor3.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\vcruntime140_cor3.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\wpfgfx_cor3.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\sni.dll
+C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\Windows\KeyboardSoundPlayer.exe
