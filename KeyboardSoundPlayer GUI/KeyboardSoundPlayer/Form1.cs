@@ -166,7 +166,12 @@ namespace KeyboardSoundPlayer
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://github.com/JGLTechnologies/KeyboardSoundPlayer#keys");
+            ProcessStartInfo psInfo = new ProcessStartInfo
+            {
+                FileName = "https://github.com/JGLTechnologies/KeyboardSoundPlayer#keys",
+                UseShellExecute = true
+            };
+            Process.Start(psInfo);
         }
     }
 }
