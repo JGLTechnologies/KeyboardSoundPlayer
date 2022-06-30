@@ -2,6 +2,7 @@
 
 KeyboardSoundPlayer is a program written in python that allows you to play a certain mp3 file when a certain key is
 pressed. You can use an already made mp3, or paste in a YouTube url and have KeyboardSoundPlayer convert it to and mp3 for you.
+The code for the GUI can be found here https://github.com/JGLTechnologies/KeyboardSoundPlayerGUI
 
 ### <a href="https://jgltechnologies.com/KeyboardSoundPlayer/download">Download</a>
 
