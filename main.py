@@ -1,4 +1,5 @@
 import json
+import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
@@ -23,7 +24,11 @@ ip = s.getsockname()[0]
 
 s.close()
 
-lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
+if sys.platform.startswith("win"):
+    lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
+else:
+    lock = filelock.UnixFileLock(lock_file="lock", timeout=1)
+
 try:
     with lock.acquire():
         root = Tk()
