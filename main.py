@@ -54,7 +54,7 @@ try:
                 yt_update = data.get("yt_update") or False
                 exit_key = data.get("exit_key") or "esc"
                 port = data.get("port") or 6238
-        except FileNotFoundError:
+        except Exception:
             gender = 0
             rate = 150
             channels = 8
@@ -65,7 +65,7 @@ try:
         try:
             with open("keys.json") as f:
                 keys = json.load(f)
-        except FileNotFoundError:
+        except Exception:
             keys = {}
 
 
