@@ -1,5 +1,5 @@
+import asyncio
 import json
-import sys
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
@@ -7,10 +7,9 @@ import pyttsx3
 from pynput import keyboard
 from pytube import YouTube
 import requests
-from moviepy.video.io.VideoFileClip import VideoFileClip
+from moviepy.video.io.VideoFileClip import AudioFileClip
 import os
 from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
-from disnake.ext import tasks
 import filelock
 from tkinter import *
 from tkinter import ttk
@@ -132,8 +131,8 @@ try:
                         progress["value"] += float(100) / (len(keys) + 1)
                         continue
                     name = vid.streams.filter(file_extension="mp4").first().download()
-                    video = VideoFileClip(name)
-                    video.audio.write_audiofile(f"{key}.mp3")
+                    video = AudioFileClip(name)
+                    video.write_audiofile(f"{key}.mp3")
                     video.close()
                     os.remove(name)
                     progress["value"] += float(100) / (len(keys) + 1)
@@ -312,16 +311,17 @@ try:
                 return Response(content_type="text/html", status=200, text=html)
 
 
-            @tasks.loop(seconds=.5)
-            async def shutdown_loop():
-                if shutdown:
-                    await app.shutdown()
-                    await app.cleanup()
-                    sys.exit()
+            async def loop():
+                while True:
+                    if shutdown:
+                        await app.shutdown()
+                        await app.cleanup()
+                        sys.exit()
+                    await asyncio.sleep(.5)
 
 
             async def startup(app: Application):
-                shutdown_loop.start()
+                asyncio.get_event_loop().create_task(loop())
 
 
             def run_server():
@@ -332,5 +332,6 @@ try:
             app.add_routes(routes)
             aiohttp_pool.submit(run_server)
             listener.run()
+
 except filelock.Timeout:
     sys.exit()
