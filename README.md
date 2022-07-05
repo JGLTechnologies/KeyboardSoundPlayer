@@ -35,6 +35,10 @@ This is the documentation for the config window in KeyboardSoundPlayer.
         type: int
         default: 6238
         description: The port used to communicate between the gui and the sound player (Don't change unless the default port is causing errors) 
+    ask_for_updates:
+        type: true/false
+        default: true
+        description: Should KeyboardSoundPlayer ask you to update if there is one available
 
 ## keys
 
