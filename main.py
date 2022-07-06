@@ -28,9 +28,15 @@ if sys.platform.startswith("win"):
 else:
     lock = filelock.UnixFileLock(lock_file="lock", timeout=1)
 
+
+def disable_event():
+    pass
+
+
 try:
     with lock.acquire():
         root = Tk()
+        root.protocol("WM_DELETE_WINDOW", disable_event)
         done = False
         progress = ttk.Progressbar()
         last_exit_press = time.time()
