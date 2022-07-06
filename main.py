@@ -1,5 +1,6 @@
 import asyncio
 import json
+import shutil
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
@@ -46,8 +47,6 @@ try:
         aiohttp_pool = ThreadPoolExecutor(1)
         app = Application()
         shutdown = False
-        mp3s = {}
-
         try:
             with open("config.json", "r") as f:
                 data = json.load(f)
@@ -147,7 +146,7 @@ try:
                     progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 if keys[key].endswith(".mp3"):
-                    mp3s[key] = keys[key]
+                    shutil.copyfile(keys[key], f"{key}.mp3")
                     progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 engine.save_to_file(keys[key], f"{key}.mp3")
@@ -220,10 +219,7 @@ try:
                             pool.submit(pygame.mixer.unpause)
                 try:
                     if enabled:
-                        if k in mp3s:
-                            file = mp3s[k]
-                        else:
-                            file = f"{k}.mp3"
+                        file = f"{k}.mp3"
                         pool.submit(play, file)
                 except Exception:
                     return
