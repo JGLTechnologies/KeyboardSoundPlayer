@@ -14,15 +14,6 @@ from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
 import filelock
 from tkinter import *
 from tkinter import ttk
-import socket
-
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-s.connect(("8.8.8.8", 80))
-
-ip = s.getsockname()[0]
-
-s.close()
 
 if sys.platform.startswith("win"):
     lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
@@ -283,34 +274,10 @@ try:
                             pool.submit(pygame.mixer.unpause)
                 try:
                     if enabled:
-                        if k in mp3s:
-                            file = mp3s[k]
-                        else:
-                            file = f"{k}.mp3"
+                        file = f"{k}.mp3"
                         pool.submit(play, file)
                 except Exception:
                     return
-
-
-            @routes.get("/play/gui")
-            async def play_gui(request: Request):
-                html = """
-                <html>
-                <form id="form">
-                <input id="input" type="text" required/><br>
-                    <button id = "button" onclick="play()">Play</button>
-                </form>
-                
-                <script>
-                    const play = async () => {
-                        let key = document.getElementById("input").value.toLowerCase()
-                        await fetch(`http://{ip}:{port}/play?key=${key}`)
-                        document.getElementById("input").value = ""
-                    }
-                </script>
-                </html>
-                """.replace("{ip}", ip).replace("{port}", str(port))
-                return Response(content_type="text/html", status=200, text=html)
 
 
             async def loop():
