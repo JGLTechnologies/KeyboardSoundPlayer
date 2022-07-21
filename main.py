@@ -29,7 +29,7 @@ try:
     with lock.acquire():
         root = Tk()
         done = False
-        progress = ttk.Progressbar()
+        progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
         last_exit_press = time.time()
         exit_presses = 1
         all_ = False
@@ -69,11 +69,7 @@ try:
 
 
         def start_pb():
-            global root
-            global progress
-            root = Tk()
             root.protocol("WM_DELETE_WINDOW", disable_event)
-            progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
             root.title("KeyboardSoundPlayer")
             root.resizable(False, False)
             root.geometry("250x75")
