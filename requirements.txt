@@ -1,6 +1,6 @@
 pynput
 pygame
-pyttsx3==2.71
+pyttsx3
 pyinstaller
 pytube
 requests
