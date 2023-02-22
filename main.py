@@ -1,6 +1,7 @@
 import asyncio
 import json
 import shutil
+import tkinter
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
@@ -14,6 +15,7 @@ from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
 import filelock
 from tkinter import *
 from tkinter import ttk
+import sys
 
 if sys.platform.startswith("win"):
     lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
@@ -27,9 +29,9 @@ def disable_event():
 
 try:
     with lock.acquire():
-        root = Tk()
+        root: tkinter.Tk
         done = False
-        progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
+        progress: ttk.Progressbar
         last_exit_press = time.time()
         exit_presses = 1
         all_ = False
@@ -69,6 +71,9 @@ try:
 
 
         def start_pb():
+            global root, progress
+            root = Tk()
+            progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
             root.protocol("WM_DELETE_WINDOW", disable_event)
             root.title("KeyboardSoundPlayer")
             root.resizable(False, False)
