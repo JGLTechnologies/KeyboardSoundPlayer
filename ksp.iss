@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "KeyboardSoundPlayer"
-#define MyAppVersion "2.1.6"
+#define MyAppVersion "2.1.7"
 #define MyAppPublisher "JGL Technologies"
 #define MyAppURL "https://jgltechnologies.com/KeyboardSoundPlayer"
 #define MyAppExeName "KeyboardSoundPlayer.exe"
