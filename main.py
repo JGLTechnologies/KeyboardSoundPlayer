@@ -1,8 +1,9 @@
 import asyncio
+import functools
 import json
 import shutil
-import subprocess
 import tkinter
+from multiprocessing.pool import ThreadPool
 from tkinter import messagebox
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -14,17 +15,35 @@ import os
 from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
 import filelock
 from tkinter import *
-from tkinter import ttk
 import sys
+from yt_dlp import YoutubeDL
+from tkinter import ttk
 
+# Setup
+done = False
+last_exit_press = time.time()
+exit_presses = 1
+all_ = False
+last_reset = time.time()
+enabled = True
+app = Application()
+shutdown = False
+progress: ttk.Progressbar
+routes = RouteTableDef()
+
+# Config
+gender = 0
+rate = 150
+channels = 8
+yt_update = False
+exit_key = "esc"
+port = 6238
+keys = {}
 
 if sys.platform.startswith("win"):
     lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
 else:
     lock = filelock.UnixFileLock(lock_file="lock", timeout=1)
-
-startupinfo = subprocess.STARTUPINFO()
-startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
 
 def disable_event():
@@ -38,282 +57,285 @@ def show_error_popup(message):
     r.destroy()  # Close the root window after the popup
 
 
-try:
-    with lock.acquire():
-        root: tkinter.Tk
-        done = False
-        progress: ttk.Progressbar
-        last_exit_press = time.time()
-        exit_presses = 1
-        all_ = False
-        last_reset = time.time()
-        enabled = True
-        aiohttp_pool = ThreadPoolExecutor(1)
-        app = Application()
-        shutdown = False
-        try:
-            with open("config.json", "r") as f:
-                data = json.load(f)
-                gender = data.get("gender") or "male"
-                rate = data.get("rate") or 170
-                if gender.lower() == "male":
-                    gender = 0
-                elif gender.lower() == "female":
-                    gender = 1
-                else:
-                    gender = 0
-                channels = data.get("channels") or 8
-                yt_update = data.get("yt_update") or False
-                exit_key = data.get("exit_key") or "esc"
-                port = data.get("port") or 6238
-        except Exception:
-            gender = 0
-            rate = 150
-            channels = 8
-            yt_update = False
-            exit_key = "esc"
-            port = 6238
+def download_audio_as_mp3(key, url):
+    options = {
+        "format": "bestaudio/best",
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+            }
+        ],
+        "outtmpl": f"{key}",
+        "quiet": True,
+    }
 
-        try:
-            with open("keys.json") as f:
-                keys = json.load(f)
-        except Exception:
-            keys = {}
+    with YoutubeDL(options) as ydl:
+        ydl.download([url])
 
-        def start_pb():
-            global root, progress
-            root = Tk()
-            progress = ttk.Progressbar(
-                root, orient=HORIZONTAL, length=100, mode="determinate"
-            )
-            root.protocol("WM_DELETE_WINDOW", disable_event)
-            root.title("KeyboardSoundPlayer")
-            root.resizable(False, False)
-            root.geometry("250x75")
-            progress.pack(pady=20)
-            root.attributes("-topmost", 1)
 
-            def loop():
-                if done:
-                    root.destroy()
-                else:
-                    root.after(100, loop)
-
-            root.after(100, loop)
-            root.mainloop()
-
-        def connected() -> bool:
-            try:
-                with requests.Session() as session:
-                    with session.get("http://google.com", timeout=5):
-                        pass
-            except Exception:
-                return False
-            return True
-
-        def save_to_file():
-            global all_
-            global progress
-            global root
-            global done
-            try:
-                with open("all.mp3"):
-                    pass
-                all_ = True
-            except FileNotFoundError:
+def connected() -> bool:
+    try:
+        with requests.Session() as session:
+            with session.get("http://google.com", timeout=5):
                 pass
-            engine = pyttsx3.init()
-            engine.setProperty("rate", rate)
-            voices = engine.getProperty("voices")
-            engine.setProperty("voice", voices[gender].id)
-            for key in keys:
-                if key == "all":
-                    all_ = True
-                if keys[key].startswith("https://"):
-                    if not connected():
-                        progress["value"] += float(100) / (len(keys) + 1)
-                        continue
-                    if os.path.exists(f"{key}.mp3") and not yt_update:
-                        progress["value"] += float(100) / (len(keys) + 1)
-                        continue
-                    try:
-                        subprocess.run(
-                            [
-                                "yt-dlp",
-                                "-x",
-                                "--audio-format",
-                                "mp3",
-                                "-o",
-                                f"{key}.mp3",
-                                f"{keys[key]}",
-                            ],
-                            check=True,
-                            startupinfo=startupinfo,
-                        )
-                    except Exception:
-                        show_error_popup(
-                            f"Error downloading audio for key: {key} \nPlease contact support: jgltechnologies.com/contact"
-                        )
-                        continue
-                    progress["value"] += float(100) / (len(keys) + 1)
-                    continue
-                if keys[key].endswith("()"):
-                    progress["value"] += float(100) / (len(keys) + 1)
-                    continue
-                if keys[key].endswith(".mp3"):
-                    shutil.copyfile(keys[key], f"{key}.mp3")
-                    progress["value"] += float(100) / (len(keys) + 1)
-                    continue
-                engine.save_to_file(keys[key], f"{key}.mp3")
+    except Exception:
+        return False
+    return True
+
+
+def setup():
+    global gender, rate, channels, yt_update, exit_key, port, keys
+    try:
+        with open("config.json", "r") as f:
+            data = json.load(f)
+            gender = data.get("gender") or "male"
+            rate = data.get("rate") or 170
+            if gender.lower() == "male":
+                gender = 0
+            elif gender.lower() == "female":
+                gender = 1
+            else:
+                gender = 0
+            channels = data.get("channels") or 8
+            yt_update = data.get("yt_update") or False
+            exit_key = data.get("exit_key") or "esc"
+            port = data.get("port") or 6238
+    except Exception:
+        pass
+    try:
+        with open("keys.json") as f:
+            keys = json.load(f)
+    except Exception:
+        return
+
+
+def start_pb():
+    global progress
+    root = Tk()
+    progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
+    root.protocol("WM_DELETE_WINDOW", disable_event)
+    root.title("KeyboardSoundPlayer")
+    root.resizable(False, False)
+    root.geometry("250x75")
+    progress.pack(pady=20)
+    root.attributes("-topmost", 1)
+
+    def pb_loop():
+        if done:
+            root.destroy()
+        else:
+            root.after(100, pb_loop)
+
+    root.after(100, pb_loop)
+    root.mainloop()
+    return progress
+
+
+@routes.get("/online")
+async def online(request: Request):
+    return Response(text="True", status=200)
+
+
+@routes.get("/stop")
+async def online(request: Request):
+    stop(app.pool)
+    return Response(text="ok", status=200)
+
+
+@routes.get("/play")
+async def play_endpoint(request: Request):
+    global enabled
+    global exit_presses
+    global last_exit_press
+    if all_:
+        try:
+            if enabled:
+                app.pool.submit(play, "all.mp3")
+        except Exception:
+            pass
+    k = request.query["key"]
+    if k == exit_key:
+        if last_exit_press + 2 <= time.time():
+            exit_presses = 1
+        if exit_presses >= 5:
+            stop(app.pool)
+        elif exit_presses == 1:
+            last_exit_press = time.time()
+        exit_presses += 1
+
+    if k in keys:
+        if keys[k] == "reset()":
+            if enabled:
+                if last_reset + 1 <= time.time():
+                    app.pool.submit(reset)
+                else:
+                    return
+        elif keys[k] == "toggle()":
+            enabled = not enabled
+            return
+        elif keys[k] == "pause()":
+            if enabled:
+                app.pool.submit(pygame.mixer.pause)
+        elif keys[k] == "unpause()":
+            if enabled:
+                app.pool.submit(pygame.mixer.unpause)
+    try:
+        if enabled:
+            file = f"{k}.mp3"
+            app.pool.submit(play, file)
+    except Exception:
+        return
+
+
+async def loop():
+    while True:
+        if shutdown:
+            await app.shutdown()
+            await app.cleanup()
+            sys.exit()
+        await asyncio.sleep(0.5)
+
+
+async def startup(app: Application):
+    asyncio.get_event_loop().create_task(loop())
+
+
+def run_server(pool: ThreadPoolExecutor):
+    run_app(app, port=port)
+    app.pool = pool
+
+
+def save_to_file():
+    global all_, done, progress
+    try:
+        with open("all.mp3"):
+            pass
+        all_ = True
+    except FileNotFoundError:
+        pass
+    engine = pyttsx3.init()
+    engine.setProperty("rate", rate)
+    voices = engine.getProperty("voices")
+    engine.setProperty("voice", voices[gender].id)
+    for key in keys:
+        if key == "all":
+            all_ = True
+        if keys[key].startswith("https://"):
+            if not connected():
                 progress["value"] += float(100) / (len(keys) + 1)
-            engine.runAndWait()
+                continue
+            if os.path.exists(f"{key}.mp3") and not yt_update:
+                progress["value"] += float(100) / (len(keys) + 1)
+                continue
+            try:
+                download_audio_as_mp3(key, keys[key])
+            except Exception as e:
+                show_error_popup(
+                    f"Error downloading audio for key: {key}\nContact us at jgltechnologies.com/contact"
+                )
+                continue
             progress["value"] += float(100) / (len(keys) + 1)
-            time.sleep(1)
-            done = True
+            continue
+        if keys[key].endswith("()"):
+            progress["value"] += float(100) / (len(keys) + 1)
+            continue
+        if keys[key].endswith(".mp3"):
+            shutil.copyfile(keys[key], f"{key}.mp3")
+            progress["value"] += float(100) / (len(keys) + 1)
+            continue
+        engine.save_to_file(keys[key], f"{key}.mp3")
+        progress["value"] += float(100) / (len(keys) + 1)
+    engine.runAndWait()
+    progress["value"] += float(100) / (len(keys) + 1)
+    time.sleep(1)
+    done = True
 
-        with ThreadPoolExecutor(1) as pool:
 
-            def stop():
-                global shutdown
-                shutdown = True
-                pool.submit(pygame.quit)
-                os._exit(1)
+def stop(pool: ThreadPoolExecutor):
+    global shutdown
+    shutdown = True
+    pool.submit(pygame.quit)
+    os._exit(1)
 
-            def play(file: str):
-                try:
-                    pygame.mixer.Sound(file).play()
-                except Exception:
+
+def play(file: str):
+    try:
+        pygame.mixer.Sound(file).play()
+    except Exception:
+        return
+
+
+def reset():
+    global last_reset
+    pygame.mixer.stop()
+    last_reset = time.time()
+
+
+def on_press(pool: ThreadPoolExecutor, key_):
+    global enabled
+    global exit_presses
+    global last_exit_press
+    if all_:
+        try:
+            if enabled:
+                pool.submit(play, "all.mp3")
+        except Exception:
+            pass
+    try:
+        k = key_.name
+    except AttributeError:
+        k = key_.char
+    if k == exit_key:
+        if last_exit_press + 2 <= time.time():
+            exit_presses = 1
+        if exit_presses >= 5:
+            stop(app.pool)
+        elif exit_presses == 1:
+            last_exit_press = time.time()
+        exit_presses += 1
+
+    if k in keys:
+        if keys[k] == "reset()":
+            if enabled:
+                if last_reset + 1 <= time.time():
+                    pool.submit(reset)
+                else:
                     return
+        elif keys[k] == "toggle()":
+            enabled = not enabled
+            return
+        elif keys[k] == "pause()":
+            if enabled:
+                pool.submit(pygame.mixer.pause)
+        elif keys[k] == "unpause()":
+            if enabled:
+                pool.submit(pygame.mixer.unpause)
+    try:
+        if enabled:
+            file = f"{k}.mp3"
+            pool.submit(play, file)
+    except Exception:
+        return
 
-            def reset():
-                global last_reset
-                pygame.mixer.stop()
-                last_reset = time.time()
 
-            def on_press(key_):
-                global enabled
-                global exit_presses
-                global last_exit_press
-                if all_:
-                    try:
-                        if enabled:
-                            pool.submit(play, "all.mp3")
-                    except Exception:
-                        pass
-                try:
-                    k = key_.name
-                except AttributeError:
-                    k = key_.char
-                if k == exit_key:
-                    if last_exit_press + 2 <= time.time():
-                        exit_presses = 1
-                    if exit_presses >= 5:
-                        stop()
-                    elif exit_presses == 1:
-                        last_exit_press = time.time()
-                    exit_presses += 1
-
-                if k in keys:
-                    if keys[k] == "reset()":
-                        if enabled:
-                            if last_reset + 1 <= time.time():
-                                pool.submit(reset)
-                            else:
-                                return
-                    elif keys[k] == "toggle()":
-                        enabled = not enabled
-                        return
-                    elif keys[k] == "pause()":
-                        if enabled:
-                            pool.submit(pygame.mixer.pause)
-                    elif keys[k] == "unpause()":
-                        if enabled:
-                            pool.submit(pygame.mixer.unpause)
-                try:
-                    if enabled:
-                        file = f"{k}.mp3"
-                        pool.submit(play, file)
-                except Exception:
-                    return
-
-            listener = keyboard.Listener(on_press=on_press)
-            pool.submit(start_pb)
-            save_to_file()
-            pool.submit(pygame.init)
-            pool.submit(pygame.mixer.set_num_channels, channels)
-            routes = RouteTableDef()
-
-            @routes.get("/online")
-            async def online(request: Request):
-                return Response(text="True", status=200)
-
-            @routes.get("/stop")
-            async def online(request: Request):
-                stop()
-                return Response(text="ok", status=200)
-
-            @routes.get("/play")
-            async def play_endpoint(request: Request):
-                global enabled
-                global exit_presses
-                global last_exit_press
-                if all_:
-                    try:
-                        if enabled:
-                            pool.submit(play, "all.mp3")
-                    except Exception:
-                        pass
-                k = request.query["key"]
-                if k == exit_key:
-                    if last_exit_press + 2 <= time.time():
-                        exit_presses = 1
-                    if exit_presses >= 5:
-                        stop()
-                    elif exit_presses == 1:
-                        last_exit_press = time.time()
-                    exit_presses += 1
-
-                if k in keys:
-                    if keys[k] == "reset()":
-                        if enabled:
-                            if last_reset + 1 <= time.time():
-                                pool.submit(reset)
-                            else:
-                                return
-                    elif keys[k] == "toggle()":
-                        enabled = not enabled
-                        return
-                    elif keys[k] == "pause()":
-                        if enabled:
-                            pool.submit(pygame.mixer.pause)
-                    elif keys[k] == "unpause()":
-                        if enabled:
-                            pool.submit(pygame.mixer.unpause)
-                try:
-                    if enabled:
-                        file = f"{k}.mp3"
-                        pool.submit(play, file)
-                except Exception:
-                    return
-
-            async def loop():
-                while True:
-                    if shutdown:
-                        await app.shutdown()
-                        await app.cleanup()
-                        sys.exit()
-                    await asyncio.sleep(0.5)
-
-            async def startup(app: Application):
-                asyncio.get_event_loop().create_task(loop())
-
-            def run_server():
-                run_app(app, port=port)
-
+def main():
+    with ThreadPoolExecutor(1) as pool:
+        with ThreadPoolExecutor(1) as aiohttp_pool:
             app.on_startup.append(startup)
             app.add_routes(routes)
-            aiohttp_pool.submit(run_server)
-            listener.run()
+            aiohttp_pool.submit(run_server, pool)
+        listener = keyboard.Listener(on_press=functools.partial(on_press, pool))
+        pool.submit(save_to_file)
+        start_pb()
+        pool.submit(pygame.init)
+        pool.submit(pygame.mixer.set_num_channels, channels)
+        listener.run()
 
+
+try:
+    with lock.acquire():
+        if __name__ == "__main__":
+            main()
 except filelock.Timeout:
     sys.exit()
