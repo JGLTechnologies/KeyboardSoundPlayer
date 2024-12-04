@@ -209,6 +209,7 @@ def on_press(pool: ThreadPoolExecutor, key_):
         k = key_.name
     except AttributeError:
         k = key_.char
+    k = str(k).lower()
     if k == exit_key:
         if last_exit_press + 2 <= time.time():
             exit_presses = 1
@@ -265,9 +266,8 @@ async def play_endpoint(request: Request):
     k = request.query.get("key")
     if k is None:
         return Response(text="Key is required", status=400)
-    k = k[0].lower()
+    k = k.lower()
     if k not in keys:
-        print(keys)
         return Response(text="Key is invalid", status=400)
     if k == exit_key:
         if last_exit_press + 2 <= time.time():
