@@ -2,9 +2,6 @@ pynput
 pygame
 pyttsx3
 pyinstaller
-pytube
 requests
-moviepy
 aiohttp
 filelock
-git+https://github.com/pytube/pytube

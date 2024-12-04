@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "KeyboardSoundPlayer"
-#define MyAppVersion "2.1.7"
+#define MyAppVersion "2.2.0"
 #define MyAppPublisher "JGL Technologies"
 #define MyAppURL "https://jgltechnologies.com/KeyboardSoundPlayer"
 #define MyAppExeName "KeyboardSoundPlayer.exe"
@@ -41,6 +41,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 [Files]
 Source: "C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\main.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\fixin\PycharmProjects\KeyboardSoundPlayer\ffmpeg.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Registry]

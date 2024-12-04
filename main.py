@@ -1,15 +1,15 @@
 import asyncio
 import json
 import shutil
+import subprocess
 import tkinter
+from tkinter import messagebox
 from concurrent.futures import ThreadPoolExecutor
 import time
 import pygame
 import pyttsx3
 from pynput import keyboard
-from pytube import YouTube
 import requests
-from moviepy.video.io.VideoFileClip import AudioFileClip
 import os
 from aiohttp.web import Application, RouteTableDef, Request, Response, run_app
 import filelock
@@ -17,14 +17,25 @@ from tkinter import *
 from tkinter import ttk
 import sys
 
+
 if sys.platform.startswith("win"):
     lock = filelock.WindowsFileLock(lock_file="lock", timeout=1)
 else:
     lock = filelock.UnixFileLock(lock_file="lock", timeout=1)
 
+startupinfo = subprocess.STARTUPINFO()
+startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
 
 def disable_event():
     pass
+
+
+def show_error_popup(message):
+    r = tkinter.Tk()
+    r.withdraw()  # Hide the root window
+    messagebox.showerror("Error", message)  # Show the error popup
+    r.destroy()  # Close the root window after the popup
 
 
 try:
@@ -69,17 +80,18 @@ try:
         except Exception:
             keys = {}
 
-
         def start_pb():
             global root, progress
             root = Tk()
-            progress = ttk.Progressbar(root, orient=HORIZONTAL, length=100, mode="determinate")
+            progress = ttk.Progressbar(
+                root, orient=HORIZONTAL, length=100, mode="determinate"
+            )
             root.protocol("WM_DELETE_WINDOW", disable_event)
             root.title("KeyboardSoundPlayer")
             root.resizable(False, False)
             root.geometry("250x75")
             progress.pack(pady=20)
-            root.attributes('-topmost', 1)
+            root.attributes("-topmost", 1)
 
             def loop():
                 if done:
@@ -90,7 +102,6 @@ try:
             root.after(100, loop)
             root.mainloop()
 
-
         def connected() -> bool:
             try:
                 with requests.Session() as session:
@@ -99,7 +110,6 @@ try:
             except Exception:
                 return False
             return True
-
 
         def save_to_file():
             global all_
@@ -123,15 +133,28 @@ try:
                     if not connected():
                         progress["value"] += float(100) / (len(keys) + 1)
                         continue
-                    vid = YouTube(url=keys[key])
                     if os.path.exists(f"{key}.mp3") and not yt_update:
                         progress["value"] += float(100) / (len(keys) + 1)
                         continue
-                    name = vid.streams.filter(file_extension="mp4").first().download()
-                    video = AudioFileClip(name)
-                    video.write_audiofile(f"{key}.mp3")
-                    video.close()
-                    os.remove(name)
+                    try:
+                        subprocess.run(
+                            [
+                                "yt-dlp",
+                                "-x",
+                                "--audio-format",
+                                "mp3",
+                                "-o",
+                                f"{key}.mp3",
+                                f"{keys[key]}",
+                            ],
+                            check=True,
+                            startupinfo=startupinfo,
+                        )
+                    except Exception:
+                        show_error_popup(
+                            f"Error downloading audio for key: {key} \nPlease contact support: jgltechnologies.com/contact"
+                        )
+                        continue
                     progress["value"] += float(100) / (len(keys) + 1)
                     continue
                 if keys[key].endswith("()"):
@@ -148,14 +171,13 @@ try:
             time.sleep(1)
             done = True
 
-
         with ThreadPoolExecutor(1) as pool:
+
             def stop():
                 global shutdown
                 shutdown = True
                 pool.submit(pygame.quit)
                 os._exit(1)
-
 
             def play(file: str):
                 try:
@@ -163,12 +185,10 @@ try:
                 except Exception:
                     return
 
-
             def reset():
                 global last_reset
                 pygame.mixer.stop()
                 last_reset = time.time()
-
 
             def on_press(key_):
                 global enabled
@@ -216,7 +236,6 @@ try:
                 except Exception:
                     return
 
-
             listener = keyboard.Listener(on_press=on_press)
             pool.submit(start_pb)
             save_to_file()
@@ -224,17 +243,14 @@ try:
             pool.submit(pygame.mixer.set_num_channels, channels)
             routes = RouteTableDef()
 
-
             @routes.get("/online")
             async def online(request: Request):
                 return Response(text="True", status=200)
-
 
             @routes.get("/stop")
             async def online(request: Request):
                 stop()
                 return Response(text="ok", status=200)
-
 
             @routes.get("/play")
             async def play_endpoint(request: Request):
@@ -280,23 +296,19 @@ try:
                 except Exception:
                     return
 
-
             async def loop():
                 while True:
                     if shutdown:
                         await app.shutdown()
                         await app.cleanup()
                         sys.exit()
-                    await asyncio.sleep(.5)
-
+                    await asyncio.sleep(0.5)
 
             async def startup(app: Application):
                 asyncio.get_event_loop().create_task(loop())
 
-
             def run_server():
                 run_app(app, port=port)
-
 
             app.on_startup.append(startup)
             app.add_routes(routes)
