@@ -3,7 +3,6 @@ import functools
 import json
 import shutil
 import tkinter
-from multiprocessing.pool import ThreadPool
 from tkinter import messagebox
 from concurrent.futures import ThreadPoolExecutor
 import time
@@ -132,80 +131,6 @@ def start_pb():
     return progress
 
 
-@routes.get("/online")
-async def online(request: Request):
-    return Response(text="True", status=200)
-
-
-@routes.get("/stop")
-async def online(request: Request):
-    stop(app.pool)
-    return Response(text="ok", status=200)
-
-
-@routes.get("/play")
-async def play_endpoint(request: Request):
-    global enabled
-    global exit_presses
-    global last_exit_press
-    if all_:
-        try:
-            if enabled:
-                app.pool.submit(play, "all.mp3")
-        except Exception:
-            pass
-    k = request.query["key"]
-    if k == exit_key:
-        if last_exit_press + 2 <= time.time():
-            exit_presses = 1
-        if exit_presses >= 5:
-            stop(app.pool)
-        elif exit_presses == 1:
-            last_exit_press = time.time()
-        exit_presses += 1
-
-    if k in keys:
-        if keys[k] == "reset()":
-            if enabled:
-                if last_reset + 1 <= time.time():
-                    app.pool.submit(reset)
-                else:
-                    return
-        elif keys[k] == "toggle()":
-            enabled = not enabled
-            return
-        elif keys[k] == "pause()":
-            if enabled:
-                app.pool.submit(pygame.mixer.pause)
-        elif keys[k] == "unpause()":
-            if enabled:
-                app.pool.submit(pygame.mixer.unpause)
-    try:
-        if enabled:
-            file = f"{k}.mp3"
-            app.pool.submit(play, file)
-    except Exception:
-        return
-
-
-async def loop():
-    while True:
-        if shutdown:
-            await app.shutdown()
-            await app.cleanup()
-            sys.exit()
-        await asyncio.sleep(0.5)
-
-
-async def startup(app: Application):
-    asyncio.get_event_loop().create_task(loop())
-
-
-def run_server(pool: ThreadPoolExecutor):
-    run_app(app, port=port)
-    app.pool = pool
-
-
 def save_to_file():
     global all_, done, progress
     try:
@@ -252,7 +177,7 @@ def save_to_file():
     done = True
 
 
-def stop(pool: ThreadPoolExecutor):
+def quit_app(pool: ThreadPoolExecutor):
     global shutdown
     shutdown = True
     pool.submit(pygame.quit)
@@ -273,9 +198,7 @@ def reset():
 
 
 def on_press(pool: ThreadPoolExecutor, key_):
-    global enabled
-    global exit_presses
-    global last_exit_press
+    global enabled, exit_presses, last_exit_press
     if all_:
         try:
             if enabled:
@@ -290,7 +213,7 @@ def on_press(pool: ThreadPoolExecutor, key_):
         if last_exit_press + 2 <= time.time():
             exit_presses = 1
         if exit_presses >= 5:
-            stop(app.pool)
+            quit_app(app.pool)
         elif exit_presses == 1:
             last_exit_press = time.time()
         exit_presses += 1
@@ -319,12 +242,95 @@ def on_press(pool: ThreadPoolExecutor, key_):
         return
 
 
+@routes.get("/online")
+async def online_endpoint(request: Request):
+    return Response(text="True", status=200)
+
+
+@routes.get("/stop")
+async def stop_endpoint(request: Request):
+    quit_app(app.pool)
+    return Response(text="ok", status=200)
+
+
+@routes.get("/play")
+async def play_endpoint(request: Request):
+    global enabled, exit_presses, last_exit_press
+    if all_:
+        try:
+            if enabled:
+                app.pool.submit(play, "all.mp3")
+        except Exception:
+            pass
+    k = request.query.get("key")
+    if k is None:
+        return Response(text="Key is required", status=400)
+    k = k[0].lower()
+    if k not in keys:
+        print(keys)
+        return Response(text="Key is invalid", status=400)
+    if k == exit_key:
+        if last_exit_press + 2 <= time.time():
+            exit_presses = 1
+        if exit_presses >= 5:
+            quit_app(app.pool)
+        elif exit_presses == 1:
+            last_exit_press = time.time()
+        exit_presses += 1
+
+    if k in keys:
+        if keys[k] == "reset()":
+            if enabled:
+                if last_reset + 1 <= time.time():
+                    app.pool.submit(reset)
+                    return Response(text="ok", status=200)
+                else:
+                    return Response(text="ok", status=200)
+        elif keys[k] == "toggle()":
+            enabled = not enabled
+            return Response(text="ok", status=200)
+        elif keys[k] == "pause()":
+            if enabled:
+                app.pool.submit(pygame.mixer.pause)
+                return Response(text="ok", status=200)
+        elif keys[k] == "unpause()":
+            if enabled:
+                app.pool.submit(pygame.mixer.unpause)
+                return Response(text="ok", status=200)
+    try:
+        if enabled:
+            file = f"{k}.mp3"
+            app.pool.submit(play, file)
+            return Response(text="ok", status=200)
+    except Exception as e:
+        return Response(text=str(e), status=500)
+
+
+async def loop():
+    while True:
+        if shutdown:
+            await app.shutdown()
+            await app.cleanup()
+            sys.exit()
+        await asyncio.sleep(0.5)
+
+
+async def startup(app: Application):
+    asyncio.get_event_loop().create_task(loop())
+
+
+def run_server(pool: ThreadPoolExecutor):
+    app.pool = pool
+    run_app(app, port=port)
+
+
 def main():
+    setup()
     with ThreadPoolExecutor(1) as pool:
-        with ThreadPoolExecutor(1) as aiohttp_pool:
-            app.on_startup.append(startup)
-            app.add_routes(routes)
-            aiohttp_pool.submit(run_server, pool)
+        aiohttp_pool = ThreadPoolExecutor(1)
+        app.on_startup.append(startup)
+        app.add_routes(routes)
+        aiohttp_pool.submit(run_server, pool)
         listener = keyboard.Listener(on_press=functools.partial(on_press, pool))
         pool.submit(save_to_file)
         start_pb()
