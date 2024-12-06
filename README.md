@@ -51,7 +51,7 @@ Functions:
     reset():
         description: Clear all of the audio channels
     toggle():
-        description: Toggle the sound player. If it is toggled of then none of the commands work until it is toggled on.
+        description: Toggle the sound player. If it is toggled off then none of the commands work until it is toggled on.
     pause():
         description: Pause all sounds
     unpause():
